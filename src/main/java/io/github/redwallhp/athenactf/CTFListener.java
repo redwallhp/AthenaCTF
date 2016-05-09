@@ -7,10 +7,7 @@ import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -143,23 +140,6 @@ public class CTFListener implements Listener {
     private boolean isCTF(Player player) {
         Arena arena = PlayerUtil.getArenaForPlayer(plugin.getAthena().getArenaHandler(), player);
         return (arena != null && isCTF(arena.getMatch()));
-    }
-
-
-    /**
-     * Get the Flag a player clicked
-     * @param blockClicked the block clicked
-     * @return Flag or null
-     */
-    private Flag getFlagClicked(Player player, Block blockClicked) {
-        MapConfiguration mapConf = plugin.getMapConfig(player);
-        if (mapConf == null) return null;
-        Flag flag = mapConf.getFlag(blockClicked.getLocation());
-        if (flag != null) {
-            return flag;
-        } else {
-            return null;
-        }
     }
 
 
