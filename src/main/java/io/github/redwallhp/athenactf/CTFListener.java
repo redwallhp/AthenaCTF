@@ -8,8 +8,7 @@ import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -80,12 +79,14 @@ public class CTFListener implements Listener {
                 } else {
                     Messenger.takeFlag(event.getPlayer(), team, flag);
                 }
+                event.getPlayer().getWorld().playSound(event.getPlayer().getLocation(), Sound.BLOCK_CLOTH_BREAK, 1.0f, 1.0f);
             }
 
             // Return own flag
             else if (flag.getTeam().equals(team) && !flag.getLocation().equals(flag.getHome())) {
                 flag.returnHome();
                 Messenger.returnFlag(event.getPlayer(), flag);
+                event.getPlayer().getWorld().playSound(event.getPlayer().getLocation(), Sound.BLOCK_CLOTH_BREAK, 1.0f, 1.0f);
             }
 
             // Score
@@ -95,8 +96,14 @@ public class CTFListener implements Listener {
                     // handle score
                     PlayerScorePointEvent e = new PlayerScorePointEvent(event.getPlayer(), flag.getTeam(), 1);
                     Bukkit.getPluginManager().callEvent(e);
+                    // return flag
                     carried.returnHome();
+                    // send message
                     Messenger.score(event.getPlayer(), flag.getTeam());
+                    // effect
+                    World world = event.getPlayer().getWorld();
+                    world.strikeLightningEffect(carried.getHome().toLocation(world));
+                    world.strikeLightningEffect(flag.getHome().toLocation(world));
                 }
             }
 
