@@ -3,10 +3,12 @@ package io.github.redwallhp.athenactf;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.events.MatchStateChangedEvent;
+import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.MatchState;
 import io.github.redwallhp.athenagm.matches.Team;
 import io.github.redwallhp.athenagm.utilities.PlayerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -91,6 +93,8 @@ public class CTFListener implements Listener {
                 Flag carried = mapConf.getFlag(event.getPlayer());
                 if (carried != null) {
                     // handle score
+                    PlayerScorePointEvent e = new PlayerScorePointEvent(event.getPlayer(), flag.getTeam(), 1);
+                    Bukkit.getPluginManager().callEvent(e);
                     carried.returnHome();
                     Messenger.score(event.getPlayer(), flag.getTeam());
                 }
