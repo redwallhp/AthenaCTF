@@ -1,0 +1,6 @@
+name: AthenaCTF
+main: io.github.redwallhp.athenactf.AthenaCTF
+description: Athena CTF Game
+author: redwall_hp
+version: ${project.version}
+depend: [AthenaGM]
