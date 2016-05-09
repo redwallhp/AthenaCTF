@@ -2,10 +2,12 @@ package io.github.redwallhp.athenactf;
 
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.Team;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import javax.naming.ConfigurationException;
@@ -93,16 +95,55 @@ public class MapConfiguration {
     }
 
 
+    /**
+     * Get the flag at a specified location
+     * @param loc The location to check
+     * @return Flag or null
+     */
+    public Flag getFlag(Location loc) {
+        for (Flag flag : flags.values()) {
+            if (flag.getLocation().equals(loc.toVector())) {
+                return flag;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Get the flag a player is carrying
+     * @param player The player to check
+     * @return Flag or null
+     */
+    public Flag getFlag(Player player) {
+        for (Flag flag : flags.values()) {
+            if (flag.getCarrier() != null && flag.getCarrier().equals(player.getUniqueId())) {
+                return flag;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Get the match this flag set is associated with
+     */
     public Match getMatch() {
         return match;
     }
 
 
+    /**
+     * Get the flag set for this match
+     */
     public HashMap<String, Flag> getFlags() {
         return flags;
     }
 
 
+    /**
+     * Get the time to wait before returning a dropped flag
+     */
     public Integer getReturnTime() {
         return returnTime;
     }

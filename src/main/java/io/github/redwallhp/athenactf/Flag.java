@@ -9,9 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
@@ -80,7 +78,7 @@ public class Flag {
             returnHome();
         } else {
             setBlock(spot);
-            this.location = loc.toVector();
+            this.location = spot.toVector();
             this.carrier = null;
             this.dropTime = System.currentTimeMillis();
         }
@@ -105,8 +103,7 @@ public class Flag {
      * @param block The flag block
      */
     public void take(Player player, Block block) {
-        block.getDrops().clear();
-        block.breakNaturally();
+        block.setType(Material.AIR);
         this.carrier = player.getUniqueId();
     }
 
