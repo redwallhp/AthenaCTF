@@ -6,6 +6,7 @@ import io.github.redwallhp.athenagm.utilities.ItemUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -76,6 +77,8 @@ public class Flag {
         }
         if (spot == null) {
             returnHome();
+            Messenger.autoReturn(this);
+            getTeam().getMatch().playSound(Sound.ENTITY_FIREWORK_BLAST);
         } else {
             setBlock(spot);
             this.location = spot.toVector();

@@ -69,7 +69,7 @@ public class CTFListener implements Listener {
         MapConfiguration mapConf = plugin.getMapConfig(event.getPlayer());
         Flag flag = mapConf.getFlag(event.getClickedBlock().getLocation());
         Team team = PlayerUtil.getTeamForPlayer(plugin.getAthena().getArenaHandler(), event.getPlayer());
-        if (flag != null && team != null) {
+        if (flag != null && team != null && !team.isSpectator()) {
 
             // Take the enemy flag
             if (!flag.getTeam().equals(team)) {
@@ -128,8 +128,8 @@ public class CTFListener implements Listener {
         Flag flag = mapConf.getFlag(event.getEntity());
 
         if (flag != null) {
-            flag.drop(event.getEntity().getLocation());
             Messenger.dropFlag(event.getEntity(), flag);
+            flag.drop(event.getEntity().getLocation());
         }
 
     }
