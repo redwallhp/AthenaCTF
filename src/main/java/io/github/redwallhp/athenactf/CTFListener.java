@@ -3,6 +3,7 @@ package io.github.redwallhp.athenactf;
 import io.github.redwallhp.athenagm.arenas.Arena;
 import io.github.redwallhp.athenagm.events.MatchCreateEvent;
 import io.github.redwallhp.athenagm.events.MatchStateChangedEvent;
+import io.github.redwallhp.athenagm.events.PlayerChangedTeamEvent;
 import io.github.redwallhp.athenagm.events.PlayerScorePointEvent;
 import io.github.redwallhp.athenagm.matches.Match;
 import io.github.redwallhp.athenagm.matches.MatchState;
@@ -116,7 +117,6 @@ public class CTFListener implements Listener {
 
     /**
      * Drop the flag on player death
-     * @param event
      */
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -130,6 +130,27 @@ public class CTFListener implements Listener {
         if (flag != null) {
             Messenger.dropFlag(event.getEntity(), flag);
             flag.drop(event.getEntity().getLocation());
+        }
+
+    }
+
+
+    /**
+     * Return the flag when a player changes teams
+     */
+    @EventHandler
+    public void onPlayerChangedTeam(PlayerChangedTeamEvent event) {
+
+        if (!isCTF(event.getPlayer())) return;
+        if (plugin.getMapConfig(event.getPlayer()) == null) return;
+
+        MapConfiguration mapConf = plugin.getMapConfig(event.getPlayer());
+        Flag flag = mapConf.getFlag(event.getPlayer());
+
+        if (flag != null) {
+            flag.returnHome();
+            Messenger.autoReturn(flag);
+            flag.getTeam().getMatch().playSound(Sound.ENTITY_FIREWORK_BLAST);
         }
 
     }
