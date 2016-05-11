@@ -89,6 +89,10 @@ public class Flag {
      * Return the flag to its home
      */
     public void returnHome() {
+        if (this.carrier == null) {
+            Location dropped = this.location.toLocation(team.getMatch().getWorld());
+            dropped.getBlock().setType(Material.AIR);
+        }
         Location loc = this.home.toLocation(team.getMatch().getWorld());
         setBlock(loc);
         this.location = this.home;

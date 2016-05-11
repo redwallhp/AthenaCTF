@@ -25,6 +25,7 @@ public class AthenaCTF extends JavaPlugin {
         mapConfigs = new HashMap<Match, MapConfiguration>();
         if (checkAthena()) {
             new CTFListener(this);
+            new FlagTask(this);
         }
     }
 

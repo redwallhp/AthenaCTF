@@ -50,6 +50,14 @@ public class Messenger {
     }
 
 
+    public static void autoReturn(Flag flag) {
+        String tMsg = String.format("%sYour flag%s has returned", flag.getTeam().getChatColor(), ChatColor.RESET);
+        String eMsg = String.format("%sThe enemy flag%s has returned", flag.getTeam().getChatColor(), ChatColor.RESET);
+        flag.getTeam().broadcast(tMsg);
+        broadcastOtherteams(eMsg, flag.getTeam());
+    }
+
+
     private static void broadcastOtherteams(String msg, Team skipTeam) {
         for (Team team : skipTeam.getMatch().getTeams().values()) {
             if (!team.equals(skipTeam)) {
