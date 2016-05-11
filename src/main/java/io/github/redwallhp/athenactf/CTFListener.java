@@ -79,14 +79,14 @@ public class CTFListener implements Listener {
                 } else {
                     Messenger.takeFlag(event.getPlayer(), team, flag);
                 }
-                event.getPlayer().getWorld().playSound(event.getPlayer().getLocation(), Sound.BLOCK_CLOTH_BREAK, 1.0f, 1.0f);
+                flag.getTeam().getMatch().playSound(Sound.BLOCK_CLOTH_BREAK);
             }
 
             // Return own flag
             else if (flag.getTeam().equals(team) && !flag.getLocation().equals(flag.getHome())) {
                 flag.returnHome();
                 Messenger.returnFlag(event.getPlayer(), flag);
-                event.getPlayer().getWorld().playSound(event.getPlayer().getLocation(), Sound.BLOCK_CLOTH_BREAK, 1.0f, 1.0f);
+                flag.getTeam().getMatch().playSound(Sound.BLOCK_CLOTH_BREAK);
             }
 
             // Score

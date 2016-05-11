@@ -51,6 +51,8 @@ public class FlagTask extends BukkitRunnable {
                 flag.getTeam().getMatch().playSound(Sound.UI_BUTTON_CLICK, 1.5f);
             }
             doReturnBar(flag, seconds, mapConf.getReturnTime());
+        } else {
+            clearBar(flag);
         }
     }
 
@@ -84,6 +86,16 @@ public class FlagTask extends BukkitRunnable {
             bar.setTitle(String.format(msg, flag.getTeam().getColoredName(), ChatColor.RESET, returnTime-seconds));
         }
         else {
+            clearBar(flag);
+        }
+    }
+
+
+    /**
+     * Clear a countdown bar for a flag if it exists
+     */
+    private void clearBar(Flag flag) {
+        if (returnBars.containsKey(flag)) {
             BossBar bar = returnBars.get(flag);
             bar.removeAll();
             returnBars.remove(flag);
