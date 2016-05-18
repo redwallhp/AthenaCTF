@@ -11,6 +11,8 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
@@ -25,6 +27,7 @@ public class Flag {
     private BlockFace facing;
     private UUID carrier;
     private Long dropTime;
+    private ItemStack carrierHelmet;
 
 
     public Flag(String id, Team team, Vector home, BlockFace facing) {
@@ -35,6 +38,7 @@ public class Flag {
         this.location = home;
         this.carrier = null;
         this.dropTime = 0L;
+        this.carrierHelmet = null;
     }
 
 
@@ -112,6 +116,35 @@ public class Flag {
     public void take(Player player, Block block) {
         block.setType(Material.AIR);
         this.carrier = player.getUniqueId();
+    }
+
+
+    /**
+     * Place the flag in the flag carrier's helmet slot.
+     * @param player The player to distinguish
+     * @param distinguish Set whether the player is distinguished
+     */
+    public void distinguishPlayer(Player player, boolean distinguish) {
+        if (distinguish) {
+            if (player.getInventory().getHelmet() != null) {
+                carrierHelmet = player.getInventory().getHelmet().clone();
+            } else {
+                carrierHelmet = null;
+            }
+            ItemStack banner = new ItemStack(Material.BANNER, 1);
+            BannerMeta meta = (BannerMeta)banner.getItemMeta();
+            meta.setBaseColor(DyeColor.getByWoolData(ItemUtil.getDyeColorByte(team.getColor())));
+            meta.setDisplayName(String.format("%s team flag", team.getColoredName()));
+            banner.setItemMeta(meta);
+            player.getInventory().setHelmet(banner);
+        } else {
+            if (carrierHelmet != null) {
+                player.getInventory().setHelmet(carrierHelmet);
+                carrierHelmet = null;
+            } else {
+                player.getInventory().setHelmet(null);
+            }
+        }
     }
 
 

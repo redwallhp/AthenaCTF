@@ -16,6 +16,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Iterator;
 
 
 public class CTFListener implements Listener {
@@ -75,6 +78,7 @@ public class CTFListener implements Listener {
             // Take the enemy flag
             if (!flag.getTeam().equals(team)) {
                 flag.take(event.getPlayer(), event.getClickedBlock());
+                flag.distinguishPlayer(event.getPlayer(), true);
                 if (flag.getLocation().equals(flag.getHome())) {
                     Messenger.stealFlag(event.getPlayer(), team, flag);
                 } else {
@@ -99,6 +103,7 @@ public class CTFListener implements Listener {
                     Bukkit.getPluginManager().callEvent(e);
                     // return flag
                     carried.returnHome();
+                    carried.distinguishPlayer(event.getPlayer(), false);
                     // send message
                     Messenger.score(event.getPlayer(), flag.getTeam());
                     // effect
@@ -130,6 +135,13 @@ public class CTFListener implements Listener {
         if (flag != null) {
             Messenger.dropFlag(event.getEntity(), flag);
             flag.drop(event.getEntity().getLocation());
+            flag.distinguishPlayer(event.getEntity(), false);
+        }
+
+        Iterator<ItemStack> iterator = event.getDrops().iterator();
+        while (iterator.hasNext()) {
+            ItemStack item = iterator.next();
+            if (item.getType().equals(Material.BANNER)) iterator.remove(); //remove helmet banners from drops
         }
 
     }
@@ -149,6 +161,7 @@ public class CTFListener implements Listener {
 
         if (flag != null) {
             flag.returnHome();
+            flag.distinguishPlayer(event.getPlayer(), false);
             Messenger.autoReturn(flag);
             flag.getTeam().getMatch().playSound(Sound.ENTITY_FIREWORK_BLAST);
         }
