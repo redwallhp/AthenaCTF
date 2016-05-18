@@ -15,6 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -164,6 +166,26 @@ public class CTFListener implements Listener {
             flag.distinguishPlayer(event.getPlayer(), false);
             Messenger.autoReturn(flag);
             flag.getTeam().getMatch().playSound(Sound.ENTITY_FIREWORK_BLAST);
+        }
+
+    }
+
+
+    /**
+     * Stop players from removing flag helmets
+     * @param event
+     */
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item = event.getCurrentItem();
+
+        if (!isCTF(player)) return;
+        if (plugin.getMapConfig(player) == null) return;
+
+        if (item.getType().equals(Material.BANNER) && event.getSlotType().equals(InventoryType.SlotType.ARMOR)) {
+            event.setCancelled(true);
         }
 
     }
