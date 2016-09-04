@@ -18,6 +18,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Iterator;
@@ -131,14 +133,7 @@ public class CTFListener implements Listener {
         if (!isCTF(event.getEntity())) return;
         if (plugin.getMapConfig(event.getEntity()) == null) return;
 
-        MapConfiguration mapConf = plugin.getMapConfig(event.getEntity());
-        Flag flag = mapConf.getFlag(event.getEntity());
-
-        if (flag != null) {
-            Messenger.dropFlag(event.getEntity(), flag);
-            flag.drop(event.getEntity().getLocation());
-            flag.distinguishPlayer(event.getEntity(), false);
-        }
+        dropCarriedFlag(event.getEntity());
 
         Iterator<ItemStack> iterator = event.getDrops().iterator();
         while (iterator.hasNext()) {
@@ -146,6 +141,28 @@ public class CTFListener implements Listener {
             if (item.getType().equals(Material.BANNER)) iterator.remove(); //remove helmet banners from drops
         }
 
+    }
+
+
+    /**
+     * Drop the flag if the player quits the game
+     */
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        if (!isCTF(event.getPlayer())) return;
+        if (plugin.getMapConfig(event.getPlayer()) == null) return;
+        dropCarriedFlag(event.getPlayer());
+    }
+
+
+    /**
+     * Drop the flag if the player is kicked from the game
+     */
+    @EventHandler
+    public void onPlayerKkick(PlayerKickEvent event) {
+        if (!isCTF(event.getPlayer())) return;
+        if (plugin.getMapConfig(event.getPlayer()) == null) return;
+        dropCarriedFlag(event.getPlayer());
     }
 
 
@@ -186,6 +203,24 @@ public class CTFListener implements Listener {
 
         if (item.getType().equals(Material.BANNER) && event.getSlotType().equals(InventoryType.SlotType.ARMOR)) {
             event.setCancelled(true);
+        }
+
+    }
+
+
+    /**
+     * Handle the dropping of a flag carried by a player
+     * @param player the player carrying the flag
+     */
+    private void dropCarriedFlag(Player player) {
+
+        MapConfiguration mapConf = plugin.getMapConfig(player);
+        Flag flag = mapConf.getFlag(player);
+
+        if (flag != null) {
+            Messenger.dropFlag(player, flag);
+            flag.drop(player.getLocation());
+            flag.distinguishPlayer(player, false);
         }
 
     }
