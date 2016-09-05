@@ -15,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Flag {
@@ -70,11 +72,17 @@ public class Flag {
      * @param loc The location to drop the flag at
      */
     public void drop(Location loc) {
+        List<Material> unsafe = new ArrayList<Material>();
+        unsafe.add(Material.AIR);
+        unsafe.add(Material.LADDER);
+        unsafe.add(Material.CARPET);
+        unsafe.add(Material.RAILS);
+        unsafe.add(Material.POWERED_RAIL);
         Location spot = null;
-        for (int y = loc.getBlockY(); y < 255; y++) {
+        for (int y = loc.getBlockY(); y < loc.getBlockY()+3; y++) {
             Block b = loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ());
             Block u = loc.getWorld().getBlockAt(loc.getBlockX(), y - 1, loc.getBlockZ());
-            if (b.getType().equals(Material.AIR) && !u.getType().equals(Material.AIR) && !u.isLiquid()) {
+            if (b.getType().equals(Material.AIR) && !unsafe.contains(u.getType()) && !u.isLiquid()) {
                 spot = b.getLocation();
                 break;
             }
