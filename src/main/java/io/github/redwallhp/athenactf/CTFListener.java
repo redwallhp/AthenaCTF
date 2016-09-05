@@ -200,6 +200,7 @@ public class CTFListener implements Listener {
 
         if (!isCTF(player)) return;
         if (plugin.getMapConfig(player) == null) return;
+        if (item == null) return;
 
         if (item.getType().equals(Material.BANNER) && event.getSlotType().equals(InventoryType.SlotType.ARMOR)) {
             event.setCancelled(true);
